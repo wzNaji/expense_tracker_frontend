@@ -19,6 +19,16 @@ function renderExpensesForMonth(monthId) {
     fetchExpensesByMonth(monthId).then(expenses => {
         const content = document.getElementById('content');
         content.innerHTML = ''; // Clear previous content
+              // Create and style the Add Expense button
+              const addExpenseBtn = document.createElement('button');
+              addExpenseBtn.id = 'addExpenseBtn';
+              addExpenseBtn.textContent = 'Add Expense';
+              addExpenseBtn.addEventListener('click', () => {
+                  console.log(`Add expense for month ID: ${monthId}`);
+                  // Add functionality to handle adding an expense here
+              });
+      
+              content.appendChild(addExpenseBtn); // Add the button to the content
         if (expenses.length >= 0) {
             const table = document.createElement('table');
             table.innerHTML = `
