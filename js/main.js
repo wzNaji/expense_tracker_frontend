@@ -12,5 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Fetch and display months in the sidebar
     renderMonths();
-    
+
+
 });
