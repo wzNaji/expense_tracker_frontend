@@ -1,0 +1,91 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+header {
+    display: flex; /* Enables Flexbox */
+    justify-content: space-between; /* Aligns children on opposite ends */
+    align-items: center; /* Centers children vertically */
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px; /* Updated padding for consistent spacing */
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+aside {
+    width: 120px;
+    background-color: #f4f4f4;
+    padding: 20px;
+    height: calc(100% - 20px); /* Adjust based on padding */
+    overflow-y: auto;
+}
+
+main {
+    flex: 1;
+    padding: 20px;
+}
+
+#monthList li {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    cursor: pointer;
+}
+
+#monthList li:hover {
+    background-color: #ddd;
+}
+
+button#logoutBtn {
+    padding: 8px 16px;
+    font-size: 16px;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button#logoutBtn:hover {
+    background-color: #8a2c1c; /* Darker shade for hover effect */
+}
+
+/* Table styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 0.9em;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-width: 400px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #dddddd;
+}
+
+th {
+    background-color: #009879;
+    color: #ffffff;
+    text-transform: uppercase;
+}
+
+tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+tr:last-of-type {
+    border-bottom: 2px solid #009879;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}

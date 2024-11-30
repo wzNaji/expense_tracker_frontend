@@ -3,9 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Login Page</title>
+    <link rel="stylesheet" href="css/login.css">
 </head>
 <body>
-    
+    <div class="login-container">
+        <header>
+            <h1 id="shop">Shop</h1>
+            <h1 id="and">N'</h1>
+            <h1 id="play">Play</h1>
+        </header>
+        <form id="login-form">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required>
+            
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+            
+            <button type="submit">Login</button>
+        </form>
+    </div>
+    <script src="js/login.js"></script>
 </body>
 </html>

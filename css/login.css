@@ -1,0 +1,80 @@
+/* General body styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: rgb(146, 24, 24);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+/* Header styles */
+header {
+    text-align: center;
+    margin-bottom: 20px; /* Space between header and login */
+}
+
+header h1 {
+    display: inline;
+    font-size: 3em;
+    margin: 0 5px;
+}
+
+/* Unique colors for each heading */
+#shop {
+    color: blue; /* Bright orange */
+}
+
+#and {
+    color: red; /* Bright green */
+}
+
+#play {
+    color: blue; /* Bright blue */
+}
+
+/* Login container styles */
+.login-container {
+    background-color: lightblue;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    text-align: center; /* Center-align the text inside the container */
+}
+
+.login-container h2 {
+    margin-bottom: 20px;
+    font-size: 1.5em;
+}
+
+.login-container label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    text-align: left;
+}
+
+.login-container input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.login-container button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007BFF;
+    border: none;
+    color: white;
+    font-size: 1em;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.login-container button:hover {
+    background-color: #0056b3;
+}
