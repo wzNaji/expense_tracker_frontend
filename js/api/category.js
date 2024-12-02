@@ -1,6 +1,7 @@
+// category.js
 import { getToken } from '../auth.js';
 
-const API_BASE = '/api/category';
+const API_BASE = 'http://localhost:8080/api/category';
 
 export async function fetchCategories() {
   const response = await fetch(`${API_BASE}/categoryList`, {
@@ -8,6 +9,10 @@ export async function fetchCategories() {
       'Authorization': `Bearer ${getToken()}`
     }
   });
+  if(response.status === 204) {
+    console.log("No saved categories")
+    return [];
+  }
   return response.json();
 }
 
