@@ -1,5 +1,6 @@
 // render.js
 import { fetchMonths, fetchExpensesByMonth } from '/js/api/month.js';
+import { createExpense, } from '/js/api/expense.js';
 import { fetchCategories } from '/js/api/category.js';
 
 export function renderMonths() {
@@ -51,7 +52,7 @@ function showExpenseModal(monthId) {
                 <label for="description">Description:</label>
                 <input type="text" id="description" name="description"><br>
                 <label for="price">Price:</label>
-                <input type="number" id="price" name="price"><br>
+                <input type="number" id="price" name="price" step="0.01" min="0">
                 <label for="category">Category:</label>
                 <select id="category" name="category" ></select><br>
                 <button type="submit">Add Expense</button>
@@ -60,16 +61,49 @@ function showExpenseModal(monthId) {
     `;
     document.body.appendChild(modal); // Append modal to body to cover entire screen
     modal.style.display = 'block';
+
     modal.querySelector('.close').addEventListener('click', () => {
-        modal.style.display = 'none';
+        document.body.removeChild(modal);
     });
     populateCategories();
+    // Adding form submission handling
+    const form = modal.querySelector('#expenseForm');
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault(); // Prevent the default form submission behavior
+
+        let categoryValue = form.category.value;
+        if(categoryValue === "") {
+            categoryValue = null;
+        }
+
+        const expenseData = {
+            itemName: form.itemName.value,
+            description: form.description.value,
+            price: parseFloat(form.price.value),
+            category : categoryValue,
+            month: {
+                id: monthId
+            }
+        }
+
+        console.log(JSON.stringify(expenseData));
+
+        try {
+            const response = await createExpense(expenseData);
+            console.log('Expense Added:', response);
+            document.body.removeChild(modal); // Remove modal after submission
+            renderExpensesForMonth(monthId);
+        } catch (error) {
+            console.error('Failed to add expense:', error);
+            // Optionally, show an error message within the modal
+        }
+    });
 }
 
 function populateCategories() {
     fetchCategories().then(categories => {
         const select = document.getElementById('category');
-        select.innerHTML = ''; // Clear existing options
+        select.innerHTML = ''; 
         categories.forEach(category => {
             let option = new Option(category.name);
             select.appendChild(option);

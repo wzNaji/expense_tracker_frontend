@@ -1,6 +1,6 @@
 import { getToken } from '../auth.js';
 
-const API_BASE = '/api/expense';
+const API_BASE = 'http://localhost:8080/api/expense';
 
 
 export async function createExpense(data) {
