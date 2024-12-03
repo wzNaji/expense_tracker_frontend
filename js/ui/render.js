@@ -72,6 +72,7 @@ function showExpenseModal(monthId) {
         event.preventDefault(); // Prevent the default form submission behavior
 
         let categoryValue = form.category.value;
+        console.log(categoryValue)
         if(categoryValue === "") {
             categoryValue = null;
         }
@@ -80,7 +81,9 @@ function showExpenseModal(monthId) {
             itemName: form.itemName.value,
             description: form.description.value,
             price: parseFloat(form.price.value),
-            category : categoryValue,
+            category :{
+                name : categoryValue
+            },
             month: {
                 id: monthId
             }
@@ -95,7 +98,7 @@ function showExpenseModal(monthId) {
             renderExpensesForMonth(monthId);
         } catch (error) {
             console.error('Failed to add expense:', error);
-            // Optionally, show an error message within the modal
+            // TODO show an error message within the modal
         }
     });
 }
@@ -129,7 +132,7 @@ function createExpenseTable(content, expenses) {
                 <td>${expense.itemName}</td>
                 <td>${expense.price}</td>
                 <td>${expense.description}</td>
-                <td>${expense.category}</td>
+                <td>${expense.category ? expense.category.name : ''}</td>
                 <td>${expense.date}</td>
             `;
             table.appendChild(row);
