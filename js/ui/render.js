@@ -1,6 +1,6 @@
 // render.js
 import { fetchMonths, fetchExpensesByMonth } from '/js/api/month.js';
-import { createExpense, } from '/js/api/expense.js';
+import { createExpense, apiDeleteExpense } from '/js/api/expense.js';
 import { fetchCategories } from '/js/api/category.js';
 
 export function renderMonths() {
@@ -22,8 +22,8 @@ function renderExpensesForMonth(monthId) {
     fetchExpensesByMonth(monthId).then(expenses => {
         const content = document.getElementById('content');
         content.innerHTML = ''; // Clear previous content
+        createExpenseTable(monthId,content, expenses);
         createAddExpenseButton(content, monthId);
-        createExpenseTable(content, expenses);
     }).catch(error => {
         console.error('Error fetching expenses:', error);
     });
@@ -71,18 +71,15 @@ function showExpenseModal(monthId) {
     form.addEventListener('submit', async (event) => {
         event.preventDefault(); // Prevent the default form submission behavior
 
-        let categoryValue = form.category.value;
-        console.log(categoryValue)
-        if(categoryValue === "") {
-            categoryValue = null;
-        }
+        
+        
 
         const expenseData = {
             itemName: form.itemName.value,
             description: form.description.value,
             price: parseFloat(form.price.value),
             category :{
-                name : categoryValue
+                name : form.category.value
             },
             month: {
                 id: monthId
@@ -116,8 +113,8 @@ function populateCategories() {
     });
 }
 
-function createExpenseTable(content, expenses) {
-    if (expenses.length > 0) {
+function createExpenseTable(monthId, content, expenses) {
+    if (expenses.length >= 0) {
         const table = document.createElement('table');
         table.innerHTML = `<tr>
             <th>Item Name</th>
@@ -125,6 +122,7 @@ function createExpenseTable(content, expenses) {
             <th>Description</th>
             <th>Category</th>
             <th>Date</th>
+            <th></th>
         </tr>`;
         expenses.forEach(expense => {
             const row = document.createElement('tr');
@@ -134,11 +132,36 @@ function createExpenseTable(content, expenses) {
                 <td>${expense.description}</td>
                 <td>${expense.category ? expense.category.name : ''}</td>
                 <td>${expense.date}</td>
+                <td><button class="deleteBtn" data-expense-id="${expense.id}">X</button></td>
             `;
             table.appendChild(row);
         });
         content.appendChild(table);
+        setupDeleteButtons(monthId);
     } else {
         content.textContent = 'No expenses available for this month.';
     }
+
+    async function deleteExpense(monthId,id) {
+        try {
+            console.log(id);
+            await apiDeleteExpense(id); // Destructure to get status and data
+            renderExpensesForMonth(monthId);
+        } catch (error) {
+            // This will catch network errors and other fetch-related issues
+            console.error("Error deleting expense:", error);
+        }
+    }
+    
+    // Function to add event listeners to all delete buttons
+function setupDeleteButtons(monthId) {
+    const deleteButtons = document.querySelectorAll('.deleteBtn'); // Select all delete buttons
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const expenseId = this.getAttribute('data-expense-id'); // Get the expense ID from data attribute
+            deleteExpense(monthId,expenseId); // Call deleteExpense function with the correct ID
+        });
+    });
+}
+
 }

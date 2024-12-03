@@ -15,12 +15,13 @@ export async function createExpense(data) {
   return response.json();
 }
 
-export async function deleteExpense(id) {
+export async function apiDeleteExpense(id) {
   const response = await fetch(`${API_BASE}/delete/${id}`, {
-    method: 'DELETE',
-    headers: {
-      'Authorization': `Bearer ${getToken()}`
-    }
+      method: 'DELETE',
+      headers: {
+          'Authorization': `Bearer ${getToken()}`
+      }
   });
-  return response.json();
+  return response.json;
 }
+
