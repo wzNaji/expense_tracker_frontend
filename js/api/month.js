@@ -1,7 +1,30 @@
-// month.js
+// /js/api/month.js
 import { getToken,checkAuth } from '../auth.js';
 
 const API_BASE = 'http://localhost:8080/api/month';
+
+// In your API module
+export async function deleteMonth(id) {
+  try {
+    const response = await fetch(`${API_BASE}/delete/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${getToken()}` // Ensure correct token handling
+      }
+    });
+    if (!response.ok) {
+      // Handle non-success responses here by throwing an error
+      const errorData = await response.json(); // Assumes backend sends error details in JSON
+      throw new Error(errorData.message || 'Failed to delete month');
+    }
+    // Only return success details if everything was okay
+    const result = await response.json(); // Parsing JSON for success response
+    return { success: true, message: result.message };
+  } catch (error) {
+    // Catch both fetch errors and errors thrown from non-ok responses
+    return { success: false, message: error.message || 'Network or parsing error' };
+  }
+}
 
 
 export async function fetchMonths() {
@@ -28,15 +51,6 @@ export async function createMonth(data) {
   return response.json();
 }
 
-export async function deleteMonth(id) {
-  const response = await fetch(`${API_BASE}/delete/${id}`, {
-    method: 'DELETE',
-    headers: {
-      'Authorization': `Bearer ${getToken()}`
-    }
-  });
-  return response.json();
-}
 
 export async function fetchExpensesByMonth(monthId) {
     const response = await fetch(`${API_BASE}/expenseList/${monthId}`, {

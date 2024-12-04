@@ -2,21 +2,40 @@
 import { fetchMonths, fetchExpensesByMonth } from '/js/api/month.js';
 import { createExpense, apiDeleteExpense } from '/js/api/expense.js';
 import { fetchCategories } from '/js/api/category.js';
+import { setupDeleteMonthButtons } from '/js/ui/events.js';
 
 export function renderMonths() {
     fetchMonths().then(months => {
+    
         const monthList = document.getElementById('monthList');
+        monthList.innerHTML = ''; // Clear the list before rendering
         months.forEach(month => {
             const li = document.createElement('li');
             li.textContent = `${month.year} - ${month.month}`;
-            li.id = month.id;
-            li.addEventListener('click', () => renderExpensesForMonth(month.id));
+            li.id = `month-${month.id}`;  // Assigning an ID to the list item for potential future use
+
+            // Create delete button for each month
+            const deleteMonthBtn = document.createElement("button");
+            deleteMonthBtn.textContent = "X";
+            deleteMonthBtn.className = "deleteMonthBtn";
+            deleteMonthBtn.setAttribute('data-month-id', month.id); // Store month ID in data attribute
+
+            li.appendChild(deleteMonthBtn);
+            li.addEventListener('click', (event) => {
+                // Check if the clicked element is not the delete button
+                if (event.target !== deleteMonthBtn) {
+                    renderExpensesForMonth(month.id);
+                }
+            });
             monthList.appendChild(li);
         });
+
+        setupDeleteMonthButtons(); // Set up delete buttons after rendering all months
     }).catch(error => {
-        console.error('Error fetching months:', error);
+        monthList.innerHTML = '<li>No months available.</li>'; // Provide feedback on the UI
     });
 }
+
 
 // add month modal
 export function showAddMonthModal() {
@@ -185,7 +204,7 @@ function createExpenseTable(monthId, content, expenses) {
         }
     }
     
-    // Function to add event listeners to all delete buttons
+    // Function to add event listeners to all delete expense buttons
 function setupDeleteButtons(monthId) {
     const deleteButtons = document.querySelectorAll('.deleteBtn'); // Select all delete buttons
     deleteButtons.forEach(button => {
