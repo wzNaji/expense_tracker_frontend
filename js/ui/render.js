@@ -18,6 +18,37 @@ export function renderMonths() {
     });
 }
 
+// add month modal
+export function showAddMonthModal() {
+    const sidebar = document.getElementById("sidebar");
+    const addMonthModal = document.createElement('div');
+    addMonthModal.id = "addMonthModal";
+    addMonthModal.className = "modal";
+
+    addMonthModal.innerHTML = `
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <form id="addMonthForm">
+                <label for="year">Year:</label>
+                <input type="text" id="year" name="year"><br>
+                <label for="month">Month:</label>
+                <input type="text" id="month" name="month"><br>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    `;
+    sidebar.appendChild(addMonthModal);
+    addMonthModal.style.display = 'block';
+
+    addMonthModal.querySelector('.close').addEventListener('click', () => {
+        sidebar.removeChild(addMonthModal);
+    });
+    const form = addMonthModal.querySelector("#addMonthForm");
+    return { form, sidebar, addMonthModal}; // Return both as an object
+}
+
+
+
 function renderExpensesForMonth(monthId) {
     fetchExpensesByMonth(monthId).then(expenses => {
         const content = document.getElementById('content');
@@ -66,6 +97,7 @@ function showExpenseModal(monthId) {
         document.body.removeChild(modal);
     });
     populateCategories();
+
     // Adding form submission handling
     const form = modal.querySelector('#expenseForm');
     form.addEventListener('submit', async (event) => {
@@ -163,5 +195,6 @@ function setupDeleteButtons(monthId) {
         });
     });
 }
+
 
 }

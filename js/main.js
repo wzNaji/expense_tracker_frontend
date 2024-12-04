@@ -1,6 +1,7 @@
 // main.js
-import { renderMonths } from './ui/render.js';
 import { checkAuth, logout } from './auth.js';
+import { renderMonths } from './ui/render.js';
+import { addMonthBtnEvent } from './ui/events.js';
 
 
 // Check authentication before DOM load
@@ -12,6 +13,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Fetch and display months in the sidebar
     renderMonths();
+
+    // Eventlistener for add month button
+    addMonthBtnEvent();
 
 
 });
