@@ -1,29 +1,79 @@
 // render.js
 import { fetchMonths, fetchExpensesByMonth } from '/js/api/month.js';
-import { createExpense, } from '/js/api/expense.js';
+import { createExpense, apiDeleteExpense } from '/js/api/expense.js';
 import { fetchCategories } from '/js/api/category.js';
+import { setupDeleteMonthButtons } from '/js/ui/events.js';
 
 export function renderMonths() {
     fetchMonths().then(months => {
+    
         const monthList = document.getElementById('monthList');
+        monthList.innerHTML = ''; // Clear the list before rendering
         months.forEach(month => {
             const li = document.createElement('li');
             li.textContent = `${month.year} - ${month.month}`;
-            li.id = month.id;
-            li.addEventListener('click', () => renderExpensesForMonth(month.id));
+            li.id = `month-${month.id}`;  // Assigning an ID to the list item for potential future use
+
+            // Create delete button for each month
+            const deleteMonthBtn = document.createElement("button");
+            deleteMonthBtn.textContent = "X";
+            deleteMonthBtn.className = "deleteMonthBtn";
+            deleteMonthBtn.setAttribute('data-month-id', month.id); // Store month ID in data attribute
+
+            li.appendChild(deleteMonthBtn);
+            li.addEventListener('click', (event) => {
+                // Check if the clicked element is not the delete button
+                if (event.target !== deleteMonthBtn) {
+                    renderExpensesForMonth(month.id);
+                }
+            });
             monthList.appendChild(li);
         });
+
+        setupDeleteMonthButtons(); // Set up delete buttons after rendering all months
     }).catch(error => {
-        console.error('Error fetching months:', error);
+        monthList.innerHTML = '<li>No months available.</li>'; // Provide feedback on the UI
     });
 }
+
+
+// add month modal
+export function showAddMonthModal() {
+    const sidebar = document.getElementById("sidebar");
+    const addMonthModal = document.createElement('div');
+    addMonthModal.id = "addMonthModal";
+    addMonthModal.className = "modal";
+
+    addMonthModal.innerHTML = `
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <form id="addMonthForm">
+                <label for="year">Year:</label>
+                <input type="text" id="year" name="year"><br>
+                <label for="month">Month:</label>
+                <input type="text" id="month" name="month"><br>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    `;
+    sidebar.appendChild(addMonthModal);
+    addMonthModal.style.display = 'block';
+
+    addMonthModal.querySelector('.close').addEventListener('click', () => {
+        sidebar.removeChild(addMonthModal);
+    });
+    const form = addMonthModal.querySelector("#addMonthForm");
+    return { form, sidebar, addMonthModal}; // Return both as an object
+}
+
+
 
 function renderExpensesForMonth(monthId) {
     fetchExpensesByMonth(monthId).then(expenses => {
         const content = document.getElementById('content');
         content.innerHTML = ''; // Clear previous content
+        createExpenseTable(monthId,content, expenses);
         createAddExpenseButton(content, monthId);
-        createExpenseTable(content, expenses);
     }).catch(error => {
         console.error('Error fetching expenses:', error);
     });
@@ -66,21 +116,22 @@ function showExpenseModal(monthId) {
         document.body.removeChild(modal);
     });
     populateCategories();
+
     // Adding form submission handling
     const form = modal.querySelector('#expenseForm');
     form.addEventListener('submit', async (event) => {
         event.preventDefault(); // Prevent the default form submission behavior
 
-        let categoryValue = form.category.value;
-        if(categoryValue === "") {
-            categoryValue = null;
-        }
+        
+        
 
         const expenseData = {
             itemName: form.itemName.value,
             description: form.description.value,
             price: parseFloat(form.price.value),
-            category : categoryValue,
+            category :{
+                name : form.category.value
+            },
             month: {
                 id: monthId
             }
@@ -95,7 +146,7 @@ function showExpenseModal(monthId) {
             renderExpensesForMonth(monthId);
         } catch (error) {
             console.error('Failed to add expense:', error);
-            // Optionally, show an error message within the modal
+            // TODO show an error message within the modal
         }
     });
 }
@@ -113,8 +164,8 @@ function populateCategories() {
     });
 }
 
-function createExpenseTable(content, expenses) {
-    if (expenses.length > 0) {
+function createExpenseTable(monthId, content, expenses) {
+    if (expenses.length >= 0) {
         const table = document.createElement('table');
         table.innerHTML = `<tr>
             <th>Item Name</th>
@@ -122,6 +173,7 @@ function createExpenseTable(content, expenses) {
             <th>Description</th>
             <th>Category</th>
             <th>Date</th>
+            <th></th>
         </tr>`;
         expenses.forEach(expense => {
             const row = document.createElement('tr');
@@ -129,13 +181,39 @@ function createExpenseTable(content, expenses) {
                 <td>${expense.itemName}</td>
                 <td>${expense.price}</td>
                 <td>${expense.description}</td>
-                <td>${expense.category}</td>
+                <td>${expense.category ? expense.category.name : ''}</td>
                 <td>${expense.date}</td>
+                <td><button class="deleteBtn" data-expense-id="${expense.id}">X</button></td>
             `;
             table.appendChild(row);
         });
         content.appendChild(table);
+        setupDeleteButtons(monthId);
     } else {
         content.textContent = 'No expenses available for this month.';
     }
+
+    async function deleteExpense(monthId,id) {
+        try {
+            console.log(id);
+            await apiDeleteExpense(id); // Destructure to get status and data
+            renderExpensesForMonth(monthId);
+        } catch (error) {
+            // This will catch network errors and other fetch-related issues
+            console.error("Error deleting expense:", error);
+        }
+    }
+    
+    // Function to add event listeners to all delete expense buttons
+function setupDeleteButtons(monthId) {
+    const deleteButtons = document.querySelectorAll('.deleteBtn'); // Select all delete buttons
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const expenseId = this.getAttribute('data-expense-id'); // Get the expense ID from data attribute
+            deleteExpense(monthId,expenseId); // Call deleteExpense function with the correct ID
+        });
+    });
+}
+
+
 }
