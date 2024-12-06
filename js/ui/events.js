@@ -1,9 +1,9 @@
 // events.js
 import { showAddMonthModal,renderMonths} from '/js/ui/render.js';
 import { createMonth, deleteMonth } from '/js/api/month.js';
-import { createCategory } from '/js/api/category.js';
+import { createCategory,deleteCategory } from '/js/api/category.js';
 
-// In your UI logic module
+
 export async function setupDeleteMonthButtons() {
     const deleteButtons = document.querySelectorAll('.deleteMonthBtn');
     deleteButtons.forEach(button => {
@@ -70,6 +70,7 @@ form.addEventListener('submit', async (event) =>{
     const result = await createCategory(categoryData);
     if(result.success){
         console.log('Category created', result.message)
+        document.body.removeChild(modal)
     }
     else {
         console.error('Error:', result.message);
@@ -78,3 +79,27 @@ form.addEventListener('submit', async (event) =>{
 })
 }
 
+export function setupCategoryDeleteButtons() {
+    console.log("inde i setup")
+    const categoryDeleteButtons = document.querySelectorAll('.categoryDeleteBtn');
+    console.log(categoryDeleteButtons)
+    categoryDeleteButtons.forEach(button => {
+        button.addEventListener('click', async () => {
+            console.log("jeg er clicked")
+            const categoryId = button.getAttribute('data-category-id');
+            try {
+                const result = await deleteCategory(categoryId);
+                if (result.success) {
+                    alert(result.message);
+                    button.closest('tr').remove(); // Remove row from table
+                } else {
+                    alert(`Error: ${result.message}`);
+                }
+            } catch (error) {
+                console.error('Error deleting category:', error);
+                alert('An unexpected error occurred. Please try again.');
+            }
+        });
+    });
+
+}
