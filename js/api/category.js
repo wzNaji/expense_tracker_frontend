@@ -13,7 +13,8 @@ export async function fetchCategories() {
     if(response.ok) {
       const result = await response.json();
       if(result.success === false){
-        return { success: false, categories: [], message: result.message };
+        return { success: false, categories: [] };
+        
       } else if(result.success === true) {
         return { success: true, categories: result.categories, message: result.message };
       }

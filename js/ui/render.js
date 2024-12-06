@@ -277,7 +277,7 @@ async function populateCategoryTable() {
                     `;
                     categoryTable.appendChild(row);
                 });
-            } else {
+            } else if(result.categories.length === 0) {
                 const emptyRow = document.createElement('tr');
                 emptyRow.innerHTML = `<td colspan="2">No categories available.</td>`;
                 categoryTable.appendChild(emptyRow);
