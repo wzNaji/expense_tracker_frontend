@@ -1,6 +1,7 @@
 // events.js
-import { showAddMonthModal,renderMonths } from '/js/ui/render.js';
+import { showAddMonthModal,renderMonths} from '/js/ui/render.js';
 import { createMonth, deleteMonth } from '/js/api/month.js';
+import { createCategory } from '/js/api/category.js';
 
 // In your UI logic module
 export async function setupDeleteMonthButtons() {
@@ -53,5 +54,27 @@ export function addMonthBtnEvent() {
 
         });
     });
+}
+
+export function addCategoryFormSubmission(modal) {
+const form = modal.querySelector('#categoryForm');
+
+form.addEventListener('submit', async (event) =>{
+    event.preventDefault(); //Prevent the default
+
+    const categoryData = {
+        name: form.name.value
+    }
+    console.log(JSON.stringify(categoryData));
+
+    const result = await createCategory(categoryData);
+    if(result.success){
+        console.log('Category created', result.message)
+    }
+    else {
+        console.error('Error:', result.message);
+    }
+
+})
 }
 
