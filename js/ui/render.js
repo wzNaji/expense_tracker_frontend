@@ -2,7 +2,7 @@
 import { fetchMonths, fetchExpensesByMonth } from '/js/api/month.js';
 import { createExpense, apiDeleteExpense } from '/js/api/expense.js';
 import { fetchCategories } from '/js/api/category.js';
-import { setupDeleteMonthButtons } from '/js/ui/events.js';
+import { setupDeleteMonthButtons, addCategoryFormSubmission } from '/js/ui/events.js';
 
 export function renderMonths() {
     fetchMonths().then(months => {
@@ -168,7 +168,7 @@ function populateCategories() {
 function createAddCategoryButton(content) {
     const addCategoryBtn = document.createElement('button');
     addCategoryBtn.id = 'addCategoryBtn';
-    addCategoryBtn.textContent = 'Add Category';
+    addCategoryBtn.textContent = 'Categories';
     addCategoryBtn.addEventListener('click', () => {
         showCategoryModal();
     });
@@ -185,6 +185,8 @@ function showCategoryModal() {
             <form id="categoryForm">
                 <label for="name">Name:</label>
                 <input type="text" id="name" name="name"><br>
+                <button type="submit">Add Category</button>
+                
             </form>
         </div>
     `;
@@ -194,6 +196,7 @@ function showCategoryModal() {
     modal.querySelector('.close').addEventListener('click', () => {
         document.body.removeChild(modal);
     });
+addCategoryFormSubmission(modal);
 }
 
 function createExpenseTable(monthId, content, expenses) {

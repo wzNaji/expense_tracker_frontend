@@ -15,19 +15,6 @@ export async function fetchCategories() {
   }
   return response.json();
 }
-
-export async function createCategory(data) {
-  const response = await fetch(`${API_BASE}/create`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${getToken()}`
-    },
-    body: JSON.stringify(data)
-  });
-  return response.json();
-}
-
 export async function deleteCategory(id) {
   const response = await fetch(`${API_BASE}/delete/${id}`, {
     method: 'DELETE',
@@ -36,4 +23,27 @@ export async function deleteCategory(id) {
     }
   });
   return response.json();
+}
+
+export async function createCategory(data) {
+  try{
+    const response = await fetch(`${API_BASE}/create`, {
+  
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${getToken()}`
+    },
+    body: JSON.stringify(data)
+  });
+  if(!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message) || 'Failed to create category';
+  }
+  const result =await response.json();
+  return {success: true, message: result.message};
+
+} catch (error){
+  return {success: false, message: error.message|| 'Network or parsing error' }
+}
 }
