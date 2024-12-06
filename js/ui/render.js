@@ -74,6 +74,7 @@ function renderExpensesForMonth(monthId) {
         content.innerHTML = ''; // Clear previous content
         createExpenseTable(monthId,content, expenses);
         createAddExpenseButton(content, monthId);
+        createAddCategoryButton(content);
     }).catch(error => {
         console.error('Error fetching expenses:', error);
     });
@@ -161,6 +162,37 @@ function populateCategories() {
         });
     }).catch(error => {
         console.error('Error loading categories:', error);
+    });
+}
+
+function createAddCategoryButton(content) {
+    const addCategoryBtn = document.createElement('button');
+    addCategoryBtn.id = 'addCategoryBtn';
+    addCategoryBtn.textContent = 'Add Category';
+    addCategoryBtn.addEventListener('click', () => {
+        showCategoryModal();
+    });
+    content.appendChild(addCategoryBtn);
+}
+
+function showCategoryModal() {
+    const modal = document.createElement('div');
+    modal.id = 'categoryModal';
+    modal.className = 'modal';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <form id="categoryForm">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name"><br>
+            </form>
+        </div>
+    `;
+    document.body.appendChild(modal); // Append modal to body to cover entire screen
+    modal.style.display = 'block';
+
+    modal.querySelector('.close').addEventListener('click', () => {
+        document.body.removeChild(modal);
     });
 }
 
