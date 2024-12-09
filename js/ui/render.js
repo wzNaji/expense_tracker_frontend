@@ -9,10 +9,12 @@ export function renderMonths() {
     
         const monthList = document.getElementById('monthList');
         monthList.innerHTML = ''; // Clear the list before rendering
+
         months.forEach(month => {
             const li = document.createElement('li');
             li.textContent = `${month.year} - ${month.month}`;
-            li.id = `month-${month.id}`;  // Assigning an ID to the list item for potential future use
+            li.id = `month-${month.id}`;
+            li.className = 'month-item'; // Base class for all months
 
             // Create delete button for each month
             const deleteMonthBtn = document.createElement("button");
@@ -22,8 +24,11 @@ export function renderMonths() {
 
             li.appendChild(deleteMonthBtn);
             li.addEventListener('click', (event) => {
-                // Check if the clicked element is not the delete button
                 if (event.target !== deleteMonthBtn) {
+                    document.querySelectorAll('.month-item').forEach(item => {
+                        item.classList.remove('selected-month'); // Remove highlight from all months
+                    });
+                    li.classList.add('selected-month'); // Highlight the clicked month
                     renderExpensesForMonth(month.id);
                 }
             });
@@ -35,6 +40,7 @@ export function renderMonths() {
         monthList.innerHTML = '<li>No months available.</li>'; // Provide feedback on the UI
     });
 }
+
 
 
 // add month modal
@@ -153,17 +159,23 @@ function showExpenseModal(monthId) {
 }
 
 function populateCategories() {
-    fetchCategories().then(categories => {
+    fetchCategories().then(response => {
         const select = document.getElementById('category');
         select.innerHTML = ''; 
-        categories.forEach(category => {
-            let option = new Option(category.name);
-            select.appendChild(option);
-        });
+        // Access the 'categories' property of the response
+        if (response.success && Array.isArray(response.categories)) {
+            response.categories.forEach(category => {
+                let option = new Option(category.name);
+                select.appendChild(option);
+            });
+        } else {
+            console.error('Categories not found or invalid response format');
+        }
     }).catch(error => {
         console.error('Error loading categories:', error);
     });
 }
+
 
 function createCategoryButton(content) {
     const categoryBtn = document.createElement('button');
@@ -223,7 +235,7 @@ function createExpenseTable(monthId, content, expenses) {
                 <td>${expense.price}</td>
                 <td>${expense.description}</td>
                 <td>${expense.category ? expense.category.name : ''}</td>
-                <td>${expense.date}</td>
+                <td>${new Date(expense.date).getDate()}</td>
                 <td><button class="deleteBtn" data-expense-id="${expense.id}">X</button></td>
             `;
             table.appendChild(row);

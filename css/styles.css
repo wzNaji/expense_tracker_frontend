@@ -41,6 +41,17 @@ main {
 #monthList li:hover {
     background-color: #ddd;
 }
+.month-item {
+    padding: 8px;
+    margin-bottom: 2px;
+}
+
+.selected-month {
+    background-color: darkgrey;
+    color: white;
+    font-weight: bold;
+}
+
 
 button#logoutBtn {
     padding: 8px 16px;
