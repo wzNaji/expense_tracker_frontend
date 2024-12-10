@@ -2,17 +2,19 @@
 import { fetchMonths, fetchExpensesByMonth } from '/js/api/month.js';
 import { createExpense, apiDeleteExpense } from '/js/api/expense.js';
 import { fetchCategories } from '/js/api/category.js';
-import { setupDeleteMonthButtons, addCategoryFormSubmission } from '/js/ui/events.js';
+import { setupDeleteMonthButtons, addCategoryFormSubmission,setupCategoryDeleteButtons} from '/js/ui/events.js';
 
 export function renderMonths() {
     fetchMonths().then(months => {
     
         const monthList = document.getElementById('monthList');
         monthList.innerHTML = ''; // Clear the list before rendering
+
         months.forEach(month => {
             const li = document.createElement('li');
             li.textContent = `${month.year} - ${month.month}`;
-            li.id = `month-${month.id}`;  // Assigning an ID to the list item for potential future use
+            li.id = `month-${month.id}`;
+            li.className = 'month-item'; // Base class for all months
 
             // Create delete button for each month
             const deleteMonthBtn = document.createElement("button");
@@ -22,8 +24,11 @@ export function renderMonths() {
 
             li.appendChild(deleteMonthBtn);
             li.addEventListener('click', (event) => {
-                // Check if the clicked element is not the delete button
                 if (event.target !== deleteMonthBtn) {
+                    document.querySelectorAll('.month-item').forEach(item => {
+                        item.classList.remove('selected-month'); // Remove highlight from all months
+                    });
+                    li.classList.add('selected-month'); // Highlight the clicked month
                     renderExpensesForMonth(month.id);
                 }
             });
@@ -35,6 +40,7 @@ export function renderMonths() {
         monthList.innerHTML = '<li>No months available.</li>'; // Provide feedback on the UI
     });
 }
+
 
 
 // add month modal
@@ -74,7 +80,7 @@ function renderExpensesForMonth(monthId) {
         content.innerHTML = ''; // Clear previous content
         createExpenseTable(monthId,content, expenses);
         createAddExpenseButton(content, monthId);
-        createAddCategoryButton(content);
+        createCategoryButton(content);
     }).catch(error => {
         console.error('Error fetching expenses:', error);
     });
@@ -153,29 +159,35 @@ function showExpenseModal(monthId) {
 }
 
 function populateCategories() {
-    fetchCategories().then(categories => {
+    fetchCategories().then(response => {
         const select = document.getElementById('category');
         select.innerHTML = ''; 
-        categories.forEach(category => {
-            let option = new Option(category.name);
-            select.appendChild(option);
-        });
+        // Access the 'categories' property of the response
+        if (response.success && Array.isArray(response.categories)) {
+            response.categories.forEach(category => {
+                let option = new Option(category.name);
+                select.appendChild(option);
+            });
+        } else {
+            console.error('Categories not found or invalid response format');
+        }
     }).catch(error => {
         console.error('Error loading categories:', error);
     });
 }
 
-function createAddCategoryButton(content) {
-    const addCategoryBtn = document.createElement('button');
-    addCategoryBtn.id = 'addCategoryBtn';
-    addCategoryBtn.textContent = 'Categories';
-    addCategoryBtn.addEventListener('click', () => {
+
+function createCategoryButton(content) {
+    const categoryBtn = document.createElement('button');
+    categoryBtn.id = 'categoryBtn';
+    categoryBtn.textContent = 'Categories';
+    categoryBtn.addEventListener('click', () => {
         showCategoryModal();
     });
-    content.appendChild(addCategoryBtn);
+    content.appendChild(categoryBtn);
 }
 
-function showCategoryModal() {
+async function showCategoryModal() {
     const modal = document.createElement('div');
     modal.id = 'categoryModal';
     modal.className = 'modal';
@@ -186,18 +198,24 @@ function showCategoryModal() {
                 <label for="name">Name:</label>
                 <input type="text" id="name" name="name"><br>
                 <button type="submit">Add Category</button>
-                
             </form>
         </div>
     `;
-    document.body.appendChild(modal); // Append modal to body to cover entire screen
+    document.body.appendChild(modal);
+
+    // Await the table creation and append it to modal content
+    const table = await populateCategoryTable();
+    modal.querySelector('.modal-content').appendChild(table);
     modal.style.display = 'block';
+    setupCategoryDeleteButtons();
 
     modal.querySelector('.close').addEventListener('click', () => {
         document.body.removeChild(modal);
     });
-addCategoryFormSubmission(modal);
+
+    addCategoryFormSubmission(modal);
 }
+
 
 function createExpenseTable(monthId, content, expenses) {
     if (expenses.length >= 0) {
@@ -217,7 +235,7 @@ function createExpenseTable(monthId, content, expenses) {
                 <td>${expense.price}</td>
                 <td>${expense.description}</td>
                 <td>${expense.category ? expense.category.name : ''}</td>
-                <td>${expense.date}</td>
+                <td>${new Date(expense.date).getDate()}</td>
                 <td><button class="deleteBtn" data-expense-id="${expense.id}">X</button></td>
             `;
             table.appendChild(row);
@@ -249,6 +267,46 @@ function setupDeleteButtons(monthId) {
         });
     });
 }
+}
 
+async function populateCategoryTable() {
+    const categoryTable = document.createElement('table');
+    categoryTable.innerHTML = `
+        <tr>
+            <th>Category Name</th>
+            <th>Action</th>
+        </tr>`;
+
+    try {
+        const result = await fetchCategories();
+        if (result.success) {
+            if (result.categories.length > 0) {
+                result.categories.forEach(category => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${category.name}</td>
+                        <td><button class="categoryDeleteBtn" data-category-id="${category.id}">Delete</button></td>
+                    `;
+                    categoryTable.appendChild(row);
+                });
+            } else if(result.categories.length === 0) {
+                const emptyRow = document.createElement('tr');
+                emptyRow.innerHTML = `<td colspan="2">No categories available.</td>`;
+                categoryTable.appendChild(emptyRow);
+            }
+        } else {
+            const errorRow = document.createElement('tr');
+            errorRow.innerHTML = `<td colspan="2">Failed to load categories.</td>`;
+            categoryTable.appendChild(errorRow);
+        }
+    } catch (error) {
+        console.error('Failed to fetch categories:', error);
+        const errorRow = document.createElement('tr');
+        errorRow.innerHTML = `<td colspan="2">Error loading categories.</td>`;
+        categoryTable.appendChild(errorRow);
+    }
+ // Ensure buttons are wired up
+    return categoryTable; // Return the table
 
 }
+
