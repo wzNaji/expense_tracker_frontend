@@ -218,8 +218,9 @@ async function showCategoryModal() {
 
 
 function createExpenseTable(monthId, content, expenses) {
-    if (expenses.length >= 0) {
+    if (expenses.length > 0) { // Check if there are expenses
         const table = document.createElement('table');
+        // Header row
         table.innerHTML = `<tr>
             <th>Item Name</th>
             <th>Price</th>
@@ -228,23 +229,49 @@ function createExpenseTable(monthId, content, expenses) {
             <th>Date</th>
             <th></th>
         </tr>`;
+
+        let totalAmount = 0; // Initialize total amount
+
         expenses.forEach(expense => {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${expense.itemName}</td>
-                <td>${expense.price}</td>
+                <td>${expense.price.toFixed(2)}</td> <!-- Format price with currency -->
                 <td>${expense.description}</td>
                 <td>${expense.category ? expense.category.name : ''}</td>
                 <td>${new Date(expense.date).getDate()}</td>
                 <td><button class="deleteBtn" data-expense-id="${expense.id}">X</button></td>
             `;
+            // Add row to table
             table.appendChild(row);
+            // Accumulate the total price
+            totalAmount += expense.price;
         });
+
+        // Create the footer
+        const tfoot = document.createElement('tfoot');
+        const footerRow = document.createElement('tr');
+
+        const footerTotalCell = document.createElement('td');
+        footerTotalCell.setAttribute('colspan', '5'); // Make it span across the first five columns
+        footerTotalCell.textContent = 'Total:';
+        footerRow.appendChild(footerTotalCell);
+        
+        const footerAmountCell = document.createElement('td');
+        footerAmountCell.textContent = `${totalAmount.toFixed(2)}`; // Format total amount with currency
+        footerRow.appendChild(footerAmountCell);
+        
+        tfoot.appendChild(footerRow);
+        table.appendChild(tfoot); // Append the footer to the table
+
+        // Append the completed table to the content area
         content.appendChild(table);
-        setupDeleteButtons(monthId);
+        setupDeleteButtons(monthId); // Set up delete buttons
     } else {
-        content.textContent = 'No expenses available for this month.';
+        content.style.paddingTop = '50px';
+        content.textContent = 'No expenses available for this month.'; // Message if no expenses
     }
+}
 
     async function deleteExpense(monthId,id) {
         try {
@@ -266,7 +293,6 @@ function setupDeleteButtons(monthId) {
             deleteExpense(monthId,expenseId); // Call deleteExpense function with the correct ID
         });
     });
-}
 }
 
 async function populateCategoryTable() {
