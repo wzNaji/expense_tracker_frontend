@@ -200,3 +200,25 @@ tr:hover {
     text-decoration: none;
     cursor: pointer;
 }
+
+#expenseForm, #categoryForm {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+#expenseForm label, #expenseForm input, #expenseForm select, #categoryForm label, #categoryForm input{
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+#expenseForm label {
+    margin-bottom: 5px; /* Smaller margin for label */
+    font-weight: bold; /* Make labels bold */
+}
+
+#expenseForm input, #expenseForm select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
