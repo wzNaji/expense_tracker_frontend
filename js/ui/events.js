@@ -23,7 +23,6 @@ export async function setupDeleteMonthButtons() {
 
 
 
-
 export function addMonthBtnEvent() {
     const addMonthBtn = document.getElementById("addMonthBtn");
 

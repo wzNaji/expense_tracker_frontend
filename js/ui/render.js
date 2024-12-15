@@ -3,6 +3,7 @@ import { fetchMonths, fetchExpensesByMonth } from '/js/api/month.js';
 import { createExpense, apiDeleteExpense } from '/js/api/expense.js';
 import { fetchCategories } from '/js/api/category.js';
 import { setupDeleteMonthButtons, addCategoryFormSubmission,setupCategoryDeleteButtons} from '/js/ui/events.js';
+import { fetchBotApi } from '/js/api/bot.js';
 
 export function renderMonths() {
     fetchMonths().then(months => {
@@ -69,7 +70,7 @@ export function showAddMonthModal() {
         sidebar.removeChild(addMonthModal);
     });
     const form = addMonthModal.querySelector("#addMonthForm");
-    return { form, sidebar, addMonthModal}; // Return both as an object
+    return { form, sidebar, addMonthModal};
 }
 
 
@@ -334,5 +335,103 @@ async function populateCategoryTable() {
  // Ensure buttons are wired up
     return categoryTable; // Return the table
 
+}
+
+// Bot functions
+
+export function setupChatButton() {
+    const chatButton = document.getElementById('botBtn');
+    chatButton.addEventListener('click', showChatModal);
+}
+
+function showChatModal() {
+    const existingModal = document.getElementById('chatModal');
+    if (!existingModal) {
+        createChatModal();
+    }
+    toggleModal(true); // Open the modal
+}
+
+function createChatModal() {
+    // Create modal container
+    const modal = document.createElement('div');
+    modal.id = 'chatModal';
+    modal.className = 'modal';
+
+    // Create modal content
+    const modalContent = document.createElement('div');
+    modalContent.className = 'modal-content';
+
+    // Create a div for example text
+    const exampleText = document.createElement('div');
+    exampleText.id = 'exampleText';
+    exampleText.textContent = "Example: 2024, 12, cola, How do I cut expenses on this product?";
+
+
+    // Create close button
+    const closeButton = document.createElement('span');
+    closeButton.className = 'close';
+    closeButton.innerHTML = '&times;';
+    // Enhance close button functionality to also clear chat messages
+    closeButton.onclick = function() {
+        toggleModal(false);
+        clearChatMessages();
+    };
+    
+    // Create chat messages container
+    const chatMessages = document.createElement('div');
+    chatMessages.id = 'chatMessages';
+    chatMessages.className = 'chat-messages';
+
+    // Create input field
+    const userInput = document.createElement('input');
+    userInput.id = 'userInput';
+    userInput.className = 'input-field';
+    userInput.setAttribute('placeholder', 'Type your message here');
+
+    // Create send button
+    const sendButton = document.createElement('button');
+    sendButton.innerText = 'Send';
+    sendButton.onclick = sendMessage;
+
+    // Assemble the modal content
+modalContent.appendChild(closeButton);
+modalContent.appendChild(exampleText);
+modalContent.appendChild(chatMessages);
+modalContent.appendChild(userInput);
+modalContent.appendChild(sendButton);
+modal.appendChild(modalContent);
+
+// Append the modal to the body
+document.body.appendChild(modal);
+}
+
+function toggleModal(show) {
+    const modal = document.getElementById('chatModal');
+    modal.style.display = show ? 'block' : 'none';
+}
+
+function clearChatMessages() {
+    const chatMessages = document.getElementById('chatMessages');
+    chatMessages.innerHTML = ''; // Clear all chat messages
+}
+
+async function sendMessage() {
+    const input = document.getElementById('userInput');
+    const message = input.value.trim();
+    if (message) {
+        const response = await fetchBotApi(...message.split(', ')); // Assuming message is 'year, month, expenseName, userQuery'
+        const chatMessages = document.getElementById('chatMessages');
+        const msgDiv = document.createElement('div');
+        if (response.success) {
+            msgDiv.textContent = "Bot: " + response.message;
+        } else {
+            msgDiv.textContent = "Bot Error: " + response.message;
+        }
+        chatMessages.appendChild(msgDiv);
+        
+        // Clear the input field
+        input.value = '';
+    }
 }
 

@@ -1,6 +1,6 @@
 // main.js
 import { checkAuth, logout } from './auth.js';
-import { renderMonths } from './ui/render.js';
+import { renderMonths,setupChatButton } from './ui/render.js';
 import { addMonthBtnEvent } from './ui/events.js';
 
 
@@ -9,7 +9,10 @@ checkAuth();
 
 document.addEventListener('DOMContentLoaded', () => {
     // Logout functionality
-    document.getElementById('logoutBtn').addEventListener('click', logout);
+    document.getElementById('logoutBtn').addEventListener('click', logout)
+
+    setupChatButton();
+
 
     // Fetch and display months in the sidebar
     renderMonths();
