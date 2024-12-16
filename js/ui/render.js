@@ -424,7 +424,7 @@ async function sendMessage() {
         const chatMessages = document.getElementById('chatMessages');
         const msgDiv = document.createElement('div');
         if (response.success) {
-            msgDiv.textContent = "Bot: " + response.message;
+            msgDiv.textContent = "Bot: " + response.message + " -- Prompt tokens: " + response.promptTokens + " - Total Tokens: " + response.totalTokens + " --";
         } else {
             msgDiv.textContent = "Bot Error: " + response.message;
         }
