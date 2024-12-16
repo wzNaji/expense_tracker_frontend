@@ -1,7 +1,7 @@
 // /js/api/month.js
 import { getToken,checkAuth } from '../auth.js';
 
-const API_BASE = 'http://localhost:8080/api/month';
+const API_BASE = 'expense-tracker-fubeene0hhb8c4c9.westeurope-01.azurewebsites.net/api/month';
 
 // In your API module
 export async function deleteMonth(id) {

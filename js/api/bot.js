@@ -1,6 +1,6 @@
 import { getToken } from '../auth.js';
 
-const API_BASE = 'http://localhost:8080/api';
+const API_BASE = 'expense-tracker-fubeene0hhb8c4c9.westeurope-01.azurewebsites.net/api';
 
 export async function fetchBotApi(year, month, expenseName, userQuery) {
     const message = `${year}, ${month}, ${expenseName}, ${userQuery}`;
