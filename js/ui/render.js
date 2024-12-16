@@ -237,7 +237,7 @@ function createExpenseTable(monthId, content, expenses) {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${expense.itemName}</td>
-                <td>${expense.price.toFixed(2)}</td> <!-- Format price with currency -->
+                <td>${expense.price.toFixed(2)} kr</td> <!-- Format price with currency -->
                 <td>${expense.description}</td>
                 <td>${expense.category ? expense.category.name : ''}</td>
                 <td>${new Date(expense.date).getDate()}</td>
@@ -259,7 +259,7 @@ function createExpenseTable(monthId, content, expenses) {
         footerRow.appendChild(footerTotalCell);
         
         const footerAmountCell = document.createElement('td');
-        footerAmountCell.textContent = `${totalAmount.toFixed(2)}`; // Format total amount with currency
+        footerAmountCell.textContent = `${totalAmount.toFixed(2)} kr`; // Format total amount with currency
         footerRow.appendChild(footerAmountCell);
         
         tfoot.appendChild(footerRow);

@@ -32,10 +32,16 @@ main {
     position: relative;
 }
 
+#monthList {
+    list-style-type: none; /* Removes bullet points */
+}
+
+
 #monthList li {
-    padding: 10px;
+    padding: 10px, 10px, 10px,0px;
     border-bottom: 1px solid #ccc;
     cursor: pointer;
+    margin-left: -50px;
 }
 
 #monthList li:hover {
@@ -149,6 +155,7 @@ button.deleteBtn:hover {
     color: black;
     border-radius: 100px;
     cursor: pointer;
+    margin: 8px;
 }
 
 .deleteMonthBtn:hover {
