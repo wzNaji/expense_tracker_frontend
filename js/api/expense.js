@@ -1,6 +1,6 @@
 import { getToken } from '../auth.js';
 
-const API_BASE = 'expense-tracker-fubeene0hhb8c4c9.westeurope-01.azurewebsites.net/api/expense';
+const API_BASE = 'http://localhost:8080/api/expense';
 
 
 export async function createExpense(data) {
