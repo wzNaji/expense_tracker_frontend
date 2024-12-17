@@ -30,7 +30,22 @@ To run this frontend application, ensure you have the following:
 
 ## Project Structure
 
-├── css/ │ ├── login.css │ └── styles.css ├── js/ │ ├── api/ │ │ ├── bot.js │ │ ├── category.js │ │ ├── expense.js │ │ └── month.js │ ├── ui/ │ │ ├── render.js │ │ └── events.js │ ├── auth.js │ └── main.js ├── index.html └── login.html
+├── css/ 
+   │ ├── login.css 
+   │ └── styles.css
+├── js/
+│ ├── api/ 
+│ ├── bot.js │
+│ ├── category.js │ 
+│ ├── expense.js │
+│ └── month.js │ 
+├── ui/
+│  ├── render.js │
+│  └── events.js │
+├── auth.js │ 
+└── main.js 
+├── index.html 
+└── login.html
 
 
 ### Explanation
