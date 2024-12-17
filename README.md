@@ -69,3 +69,14 @@ Protected Routes: Ensures that unauthenticated users cannot access the main appl
 **Responsive degin**
 Desgined to be used on desktops, tablets, and mobile devices
 
+## Application
+![Screenshot 2024-12-17 122451](https://github.com/user-attachments/assets/8b6aa8be-31ea-4d43-a7d6-9911035e489a)
+![Screenshot 2024-12-17 122720](https://github.com/user-attachments/assets/39b05e5c-c43d-4809-89ec-f77c03fc2d29)
+![Screenshot 2024-12-17 122808](https://github.com/user-attachments/assets/bfe9652e-f227-4963-bb81-519cfa511d22)
+![Screenshot 2024-12-17 122825](https://github.com/user-attachments/assets/6b60ede8-ae2d-466e-b6f1-cc8377b67c20)
+
+
+
+
+
+
