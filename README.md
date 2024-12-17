@@ -28,7 +28,7 @@ To run this frontend application, ensure you have the following:
    npm install -g http-server
    http-server .
 
-##Project Structure
+## Project Structure
 
 |-- /css
 |   |-- login.css
