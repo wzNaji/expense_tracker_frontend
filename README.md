@@ -28,7 +28,8 @@ To run this frontend application, ensure you have the following:
    npm install -g http-server
    http-server .
 
-**Project Structure**
+##Project Structure
+
 |-- /css
 |   |-- login.css
 |   |-- styles.css
@@ -47,15 +48,16 @@ To run this frontend application, ensure you have the following:
 |-- login.html
 
 
-**How to Use**
-Login: Start by logging in through the login.html page.
-Navigating the Application: Once logged in, you can view months and expenses, interact with the chatbot, and perform CRUD operations.
-Interacting with the AI Chatbot: Use the chatbot for advice on expenses by entering queries as specified.
+## How to Use
+**Login:** Start by logging in through the login.html page.
+
+**Navigating the Application:** Once logged in, you can view months and expenses, interact with the chatbot, and perform CRUD operations.
+**Interacting with the AI Chatbot:** Use the chatbot for advice on expenses by entering queries as specified.
 
 **API Integration**
 The frontend interacts with the backend via API endpoints defined in the JavaScript modules under /js/api. These modules handle the fetching and sending of data for expenses, months, categories, and chat interactions.
 
-*Security Features**
+**Security Features**
 JWT Authentication: Manages sessions using JWT stored in localStorage.
 Protected Routes: Ensures that unauthenticated users cannot access the main application pages.
 
