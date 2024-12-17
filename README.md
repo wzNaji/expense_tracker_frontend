@@ -30,22 +30,27 @@ To run this frontend application, ensure you have the following:
 
 ## Project Structure
 
-|-- /css
-|   |-- login.css
-|   |-- styles.css
-|-- /js
-|   |-- /api
-|   |   |-- bot.js
-|   |   |-- category.js
-|   |   |-- expense.js
-|   |   |-- month.js
-|   |-- /ui
-|   |   |-- render.js
-|   |   |-- events.js
-|   |-- auth.js
-|   |-- main.js
-|-- index.html
-|-- login.html
+├── css/ │ ├── login.css │ └── styles.css ├── js/ │ ├── api/ │ │ ├── bot.js │ │ ├── category.js │ │ ├── expense.js │ │ └── month.js │ ├── ui/ │ │ ├── render.js │ │ └── events.js │ ├── auth.js │ └── main.js ├── index.html └── login.html
+
+
+### Explanation
+
+- **/css/**: Contains CSS files that style the HTML content.
+  - `login.css`: Styles specific to the login page.
+  - `styles.css`: General styles used throughout the application.
+- **/js/**: JavaScript files split into API interaction and UI rendering.
+  - **/api/**: Handles communication with backend services.
+    - `bot.js`: Manages interactions with the AI chatbot.
+    - `category.js`: Functions related to category management.
+    - `expense.js`: Scripts for handling expense data.
+    - `month.js`: Deals with operations related to months.
+  - **/ui/**: Scripts that manage the user interface.
+    - `render.js`: Renders data into HTML views.
+    - `events.js`: Attaches event handlers for UI interactions.
+  - `auth.js`: Manages user authentication processes.
+  - `main.js`: Main JavaScript file that initializes the application.
+- **index.html**: The main entry point of the application.
+- **login.html**: The user login interface.
 
 
 ## How to Use
