@@ -333,4 +333,59 @@ tr:hover {
     margin-right: 10px;
 }
 
+/* Media Query for Tablets */
+@media (max-width: 1024px) {
+    aside {
+        width: 100px; /* Smaller width for sidebar */
+    }
+
+    header, .container, main {
+        flex-direction: column; /* Stack elements vertically */
+        align-items: stretch; /* Align items to stretch to container width */
+    }
+
+    main {
+        height: auto; /* Adjust height for scrollable content */
+    }
+}
+
+/* Media Query for Mobile Devices */
+@media (max-width: 767px) {
+    aside {
+        width: 80px; /* Even smaller sidebar */
+        padding: 10px;
+    }
+
+    header {
+        flex-direction: column;
+        padding: 5px 10px; /* Reduce padding */
+    }
+
+    main {
+        padding: 10px;
+    }
+
+    .modal-content {
+        width: 90%; /* Use more of the screen for modals */
+    }
+
+    button, .input-field {
+        width: 100%; /* Full width buttons and input fields */
+        margin-top: 10px;
+    }
+
+    #monthList li {
+        margin-left: 0; /* Adjust margin */
+    }
+    .deleteMonthBtn {
+        top: 3px; /* Aligns the button to the top of the main content */
+        padding: 8px 8px;
+        font-size: 16px;
+        background-color: red;
+        color: black;
+        border-radius: 100px;
+        cursor: pointer;
+        margin: 8px;
+    }
+}
 
